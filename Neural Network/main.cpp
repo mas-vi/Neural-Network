@@ -25,7 +25,7 @@ void generateData(int n)
 				countEq++;
 		}
 		
-		std::cout << "Count eq = " << countEq / 100.0;
+		std::cout << "Count eq = " << countEq / 100.0<<'\n';
 		out.close();
 	}
 }
@@ -66,8 +66,8 @@ public:
 				for (int i = 0; i < 2; i++)
 				{
 					int z = 0;
-					for (int i = 0; i < 2; i++)
-						z += weights1[i][k] * inputLayer[k];
+					for (int j = 0;j < 2; j++)
+						z += weights1[i][j] * inputLayer[j];
 					hiddenLayer[i] = activationFunction(z);
 				}
 				int z = 0;
