@@ -5,6 +5,11 @@
 
 
 //Implementation of a true neural netwrok
+
+double sigmoid(double z)
+{
+	return 1.0 / (1 + exp(-z));
+}
 class NeuralNetwork {
 private:
 	int inputSize;
@@ -25,6 +30,10 @@ private:
 		for (int i = 0; i < outputSize; i++)
 			for (int j = 0; j < hiddenSize; j++)
 				weightsHiddenOutput[i][j] = dist(gen);
+		for (int i = 0; i < hiddenSize; i++)
+			hiddenBias[i] = dist(gen);
+		for (int i = 0; i < outputSize; i++)
+			outputBias[i] = dist(gen);
 
 
 	}
@@ -39,18 +48,40 @@ public:
 		hiddenBias.resize(hiddenSize);
 		outputBias.resize(outputSize);
 		initializeWeightsAndBiases();
-		printWeights();
+		printWeightsAndBiases();
 		
 
 
 	}
+
+
+
 	std::vector<double> predict(const std::vector<double>& input)
 	{
-		
+		std::vector<double> hiddenLayer(hiddenSize);
+		std::vector<double> outputLayer(outputSize);
+		for (int i = 0; i < hiddenSize; i++)
+		{
+			double z{0.0};
+			for (int k = 0; k < inputSize; k++)
+				z += weightsInputHidden[i][k] * input[k];
+			z += hiddenBias[i];
+			hiddenLayer[i] = sigmoid(z);
+				
+		}
+		for (int i = 0; i < outputSize; i++)
+		{
+			double z{0.0};
+			for (int k = 0; k < hiddenSize; k++)
+				z += weightsHiddenOutput[i][k] * hiddenLayer[k];
+			z += outputBias[i];
+			outputLayer[i] = sigmoid(z);
+		}
+		return outputLayer;
 		
 	}
 
-	void printWeights()
+	void printWeightsAndBiases()
 	{
 		for (int i = 0; i < hiddenSize; i++)
 		{
@@ -64,7 +95,15 @@ public:
 				std::cout << weightsHiddenOutput[i][j] << " ";
 			std::cout << '\n';
 		}
+		for (int i = 0; i < hiddenSize; i++)
+			std::cout << hiddenBias[i] << " ";
+		std::cout << '\n';
+		for (int i = 0; i < outputSize; i++)
+			std::cout << outputBias[i] << " ";
+		std::cout << '\n';
 	}
+
+	
 
 };
 
@@ -74,7 +113,8 @@ public:
 int main()
 {
 	NeuralNetwork network(1, 8, 1);
-	runNetworkEq(150);
+	double d = network.predict({ 1.0 })[0];
+	std::cout << d << '\n';
 	
 	
 
